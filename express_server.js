@@ -12,6 +12,9 @@ var urlDatabase = {
 
 app.get("/", (req, res) => {
   res.send("Hello!");
+})
+   .get("/urls.json", (req, res) => {
+    res.json(urlDatabase);
 });
 
 app.listen(PORT, () => {
