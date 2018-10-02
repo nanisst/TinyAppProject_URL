@@ -12,7 +12,6 @@ var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
   "503nc4": "https://www.facebook.com/nanisotoo"
-
 };
 
 
@@ -45,7 +44,9 @@ app.post("/urls", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   // let longURL = ...
   let longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
+  if (longURL === undefined) {
+    res.redirect("http://localhost:8080/urls");
+  } else {res.redirect(longURL);}
 });
 
 //req.params is the path on the web
@@ -53,6 +54,13 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id , longURL: urlDatabase[req.params.id] };
   res.render("urls_show", templateVars);
 });
+
+/*
+app.get("/u/:shortURL", (req, res) => {
+  // let longURL = ...
+  let longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
+});*/
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
