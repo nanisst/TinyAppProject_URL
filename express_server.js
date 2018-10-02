@@ -13,8 +13,11 @@ var urlDatabase = {
 app.get("/", (req, res) => {
   res.send("Hello!");
 })
-   .get("/urls.json", (req, res) => {
+   .get("/urls.json", (req, res) => { //De donde viene el path
     res.json(urlDatabase);
+})
+   .get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.listen(PORT, () => {
