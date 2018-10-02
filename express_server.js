@@ -10,7 +10,9 @@ app.set("view engine", "ejs"); //Tell Express App to use EJS as its templating e
 //To keep track of all the URLs and their shortened forms
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "9sm5xK": "http://www.google.com",
+  "503nc4": "https://www.facebook.com/nanisotoo"
+
 };
 
 
@@ -34,6 +36,18 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+
+app.post("/urls", (req, res) => {
+  console.log(req.body);  // debug statement to see POST parameters
+  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  // let longURL = ...
+  let longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
+});
+
 //req.params is the path on the web
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id , longURL: urlDatabase[req.params.id] };
@@ -49,24 +63,14 @@ app.listen(PORT, () => {
 });
 
 
+function generateRandomString() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-/*
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>TinyApp</title>
-</head>
-<body>
-    <!-- Add your EJS code here -->
-  <h1>Index of Urls</h1>
-  <h2>Loop</h2>
-  <ul>
-      <% urls.forEach(function(url) { %>
-          <li><%= url.name %> - <%= url.link %></li>
-      <% }); %>
-  </ul>
+  for (var i = 0; i < 6; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
 
 
-</body>
-</html>
-*/

@@ -2,8 +2,16 @@
 <html lang="en">
   <head></head>
   <body style="font-size:20px; padding:50px;">
-    <% include partials/_header %>
-    <!-- indicate the URL to submit to and the HTTP method to use when submitting the form. -->
+    <header>
+    <% include ./partials/_header %>
+    </header>
+
+    <!-- indicate the URL to submit to and the HTTP method to use when submitting the form.
+    The form has an action attribute set to /urls
+    The form's method is set to POST
+    The form has one named input, with the name attribute set to longURL
+    -->
+
     <form action="/urls" method="POST" style="margin:150px;">
       <label for="longURL">Enter a URL:</label>
       <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
