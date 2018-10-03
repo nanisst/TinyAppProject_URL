@@ -9,14 +9,15 @@
     <% include ./partials/_header %>
   </header>
     <!-- Add your EJS code here -->
-  <h2>Index of Urls</h2>
+  <h2>Index</h2>
   <ul>
-      <% for (var key in urls)  { %>
-          <li> <%= key %> - <%= urls[key] %></li>
+    <% for (var key in urls)  { %>
+      <li> <%= key %> - <%= urls[key] %> </li>
+      <p>--><a href="/urls/<%=key%>">Edit</a></p>
 
-          <form method="POST" action= <%="/urls/" + key + "/delete" %> > <input type="Submit" value="Delete"> </form>
+      <form method="POST" action= <%="/urls/" + key + "/delete" %> > <input type="Submit" value="Delete"> </form>
 
-      <% }; %>
+    <% }; %>
   </ul>
 
 </body>

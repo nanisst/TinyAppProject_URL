@@ -4,6 +4,8 @@ var express = require("express");
 var app = express();
 var PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
+var cookiesParse = require('cookie-parser');
+
 
 app.set("view engine", "ejs"); //Tell Express App to use EJS as its templating engine
 
@@ -18,17 +20,23 @@ var urlDatabase = {
 
 // The body-parser library will allow us to access POST request parameters
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookiesParse());
 
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
+
+
 
 app.get("/urls.json", (req, res) => { //path is the one of the web
   res.json(urlDatabase);
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase};
+  let templateVars = {
+    urls: urlDatabase,
+    username: req.cookies["username"]};
+    console.log("templateVars", templateVars);
   res.render("urls_index", templateVars);
 });
 
@@ -47,7 +55,7 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
-//Post request <---------<-------<-------------<------<-------
+//Post request
 app.post("/urls/:id/post", (req, res) => {
   try {
     urlDatabase[req.params.id] = req.body.subbody; //access to my form --> body's content
@@ -56,6 +64,19 @@ app.post("/urls/:id/post", (req, res) => {
   }
   res.redirect("/urls");
 });
+
+// Log in<---------<-------<-------------<------<-------
+app.post("/login", (req,res) => {
+  res.cookie("username", req.body.username);
+
+  res.redirect("/urls");
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
+  res.redirect("/urls");
+});
+
 
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
@@ -66,13 +87,17 @@ app.get("/u/:shortURL", (req, res) => {
 
 //req.params is the path on the web
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id , longURL: urlDatabase[req.params.id] };
+  let templateVars = {
+    shortURL: req.params.id ,
+    longURL: urlDatabase[req.params.id],
+    username: req.cookies["username"] };  //add username to templatevars
   res.render("urls_show", templateVars);
 });
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
+
 
 app.listen(PORT, () => {
   console.log("Example app listening on port ${PORT}!");
@@ -88,5 +113,6 @@ function generateRandomString() {
 
   return text;
 }
+
 
 
