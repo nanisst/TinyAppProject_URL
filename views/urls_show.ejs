@@ -13,9 +13,14 @@
     <% include ./partials/_header %>
 </header>
 
-  <h2>Show of Url</h2>
+  <h2>shortUrl: <%= shortURL %></h2>
   <ul>
-      <li><%= shortURL %> - <%= longURL %></li>
+<!--     <li><%= shortURL %> - <%= longURL %></li> -->
+
+    <form method="POST" action=  "/urls/<%=shortURL%>/post"> Update URL:
+      <input name="subbody" type="text"  value="<%=longURL%>" >
+      <input type="submit" value="Submit">
+    </form>
 
   </ul>
 

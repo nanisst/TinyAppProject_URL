@@ -15,6 +15,7 @@ var urlDatabase = {
 };
 
 
+
 // The body-parser library will allow us to access POST request parameters
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -46,8 +47,17 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+//Post request <---------<-------<-------------<------<-------
+app.post("/urls/:id/post", (req, res) => {
+  try {
+    urlDatabase[req.params.id] = req.body.subbody; //access to my form --> body's content
+  } catch (err) {
+    console.log("something went terribly wrong", err);
+  }
+  res.redirect("/urls");
+});
+
 app.get("/u/:shortURL", (req, res) => {
-  // let longURL = ...
   let longURL = urlDatabase[req.params.shortURL];
   if (longURL === undefined) {
     res.redirect("http://localhost:8080/urls");
@@ -59,13 +69,6 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id , longURL: urlDatabase[req.params.id] };
   res.render("urls_show", templateVars);
 });
-
-/*
-app.get("/u/:shortURL", (req, res) => {
-  // let longURL = ...
-  let longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
-});*/
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
