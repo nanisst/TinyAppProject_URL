@@ -64,11 +64,6 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-app.post("/urls", (req, res) => {
-  console.log(req.body);  //
-  res.send("Ok \uD83D\uDC4D");
-});
-
 
 // ___________++ New ++___________
 
@@ -80,6 +75,13 @@ app.get("/urls/new", (req, res) => {
     userData: users  // <-<--<-<-<-<-<<<<-<------<<<<----
   };
   res.render("urls_new", templateVars);
+});
+
+app.post("/urls/new", (req, res)=> {
+  console.log(req.body);
+  urlDatabase[generateRandomString()] = req.body.longURL;
+  //res.send("Ok \uD83D\uDC4D");
+  res.redirect("/urls");
 });
 
 
