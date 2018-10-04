@@ -4,9 +4,9 @@
 <h1> Tiny Url's Page </h1>
 
 <p>*<a href="/urls">Home</a>*</p>
-<% if (username)  { %>
+<% if (user)  { %>
 
-<p>Welcome <%= username %>. Your email account is: <%= email %>  </p>
+<p>Welcome <%=user.id%>. Your email account is: <%=user.email%> </p>
 <form method="POST" action="/logout">
   <input type="submit" value="logout">
 </form>

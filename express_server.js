@@ -31,8 +31,6 @@ var users = {
 };
 
 
-// The body-parser library will allow us to access
-//POST request parameters
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookiesParse());
 
@@ -57,16 +55,12 @@ app.get("/urls.json", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let userToken = req.cookies.user_ID;
-  let userEmail = req.cookies.email;
-  let userpsw = req.cookies.password;
-
   let templateVars = {
     urls: urlDatabase,
-    username: userToken,
-    email: userEmail,
-    password: userpsw
+    user: users[userToken],
+    userData: users
   };
-    console.log("templateVars", templateVars);
+  console.log("templateVars", templateVars);
   res.render("urls_index", templateVars);
 });
 
@@ -80,13 +74,10 @@ app.post("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   let userToken = req.cookies.user_ID;
-  let userEmail = req.cookies.email;
-  let userpsw = req.cookies.password;
-
   let templateVars = {
-    username: userToken,
-    email: userEmail,
-    password: userpsw
+    urls: urlDatabase,
+    user: users[userToken],
+    userData: users  // <-<--<-<-<-<-<<<<-<------<<<<----
   };
   res.render("urls_new", templateVars);
 });
@@ -111,7 +102,6 @@ app.post("/urls/:id/post", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie("user_ID");
-  //Checar si hay que limpiar tambien correo y contraseña
   res.redirect("/urls");
 });
 
@@ -125,19 +115,18 @@ app.get("/u/:shortURL", (req, res) => {
   } else {res.redirect(longURL);}
 });
 
+
 // ___________++ Search ++___________
 
 app.get("/urls/:id", (req, res) => {
   let userToken = req.cookies.user_ID;
-  let userEmail = req.cookies.email;
-  let userpsw = req.cookies.password;
 
   let templateVars = {
+    urls: urlDatabase,
+    user: users[userToken],
+    userData: users,
     shortURL: req.params.id ,
-    longURL: urlDatabase[req.params.id],
-    username: userToken,
-    email: userEmail,
-    password: userpsw
+    longURL: urlDatabase[req.params.id]
   };
   res.render("urls_show", templateVars);
 });
@@ -147,13 +136,11 @@ app.get("/urls/:id", (req, res) => {
 
 app.get("/register", (req, res) => {
   let userToken = req.cookies.user_ID;
-  let userEmail = req.cookies.email;
-  let userpsw = req.cookies.password;
-
   let templateVars = {
-    username: userToken,
-    email: userEmail,
-    password: userpsw};
+    urls: urlDatabase,
+    user: users[userToken],
+    userData: users
+  };
 
   res.render("register", templateVars);
 });
@@ -171,8 +158,6 @@ app.post("/register", (req, res) =>{
     res.send('Please write your email and password again');
   } else {
     res.cookie("user_ID", userRandomID);
-    res.cookie("email", req.body.email);
-    res.cookie("password", req.body.password);
     res.redirect("/urls");
   }
 });
@@ -181,36 +166,38 @@ app.post("/register", (req, res) =>{
 
 app.get("/login", (req, res) => {
   let userToken = req.cookies.user_ID;
-  let userEmail = req.cookies.email;
-  let userpsw = req.cookies.password;
-
   let templateVars = {
-    // shortURL: req.params.id ,
-    // longURL: urlDatabase[req.params.id],
-    username: userToken,
-    email: userEmail,
-    password: userpsw};
-
+    urls: urlDatabase,
+    user: users[userToken],
+    userData: users,
+    shortURL: req.params.id ,
+    longURL: urlDatabase[req.params.id],
+  };
   res.render("login", templateVars);
 });
 
-// app.post("/login", (req,res) => {
-//   res.cookie("username", req.body.username);
-// });
+app.post("/login", (req,res) => {
+  //res.cookie("username", req.body.username);
 
-app.post("/login", (req, res) =>{
-  var userRandomID = generateRandomString();
-  users[userRandomID] = {};
-  users[userRandomID].id = userRandomID;
-  users[userRandomID].email = req.body.email;
-  users[userRandomID].password = req.body.password;
+  const user = authenticateUser(req.body.email, req.body.password);
 
-  if (req.body.email === undefined || req.body.password === undefined) {
+  if (user) {
+    res.cookie("user_ID", user.id);
+    console.log("user_id ", user.id)  //<-----<-------<<-------
+    res.redirect("/urls");
+  } else {
     res.status(400);
     res.send('None shall pass');
   }
-  res.redirect("/urls");
 });
+
+function authenticateUser(email, password) {
+  for (var key in users) {
+    if (users[key].email === email && users[key].password === password) {
+      return users[key];
+    }
+  }
+}
 
 app.listen(PORT, () => {
   console.log("Example app listening on port ${PORT}!");
@@ -224,13 +211,3 @@ function generateRandomString() {
   return text;
 }
 
-
-
-/*In order to do this, the endpoint will first need to try and find a user that matches the email submitted via the login form. If a user with that e-mail cannot be found, return a response with a 403 status code.
-If a user with that e-mail address is located, compare the password given in the form with the existing user's password. If it does not match, return a response with a 403 status code.
-If both checks pass, set the user_id cookie with the matching user's random ID, then redirect to /.*/
-
-
-
-//usertoken = .user_ID <<nuevo nombre de la cookie
-//llamar a la nueva usertoken en lugar de username
