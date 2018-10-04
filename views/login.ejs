@@ -1,0 +1,33 @@
+<!-- Short urls -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+    <!-- Add your EJS code here -->
+
+<header>
+    <% include ./partials/_header %>
+</header>
+
+  <h2>Login</h2>
+  <ul>
+    <form method="POST" action="/login">
+      <!-- UserName:    *****(cambiar por el q me dijo !)*****
+      <input type="text" name="username"> -->
+      Email:
+      <input type="email" name="email" placeholder="email">
+      Password:
+      <input type="password" name="password" placeholder="password">
+
+      <input type="submit" value="Sign In">
+    </form>
+  </ul>
+
+
+</body>
+</html>
+
