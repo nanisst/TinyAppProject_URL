@@ -6,6 +6,8 @@ var PORT = 8080;
 const bodyParser = require("body-parser");
 var cookiesParse = require('cookie-parser');
 
+const bcrypt = require('bcrypt');
+
 //Tell Express App to use EJS as its templating engine
 app.set("view engine", "ejs");
 
@@ -167,11 +169,15 @@ app.get("/register", (req, res) => {
 
 
 app.post("/register", (req, res) =>{
+
+  const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
   var userRandomID = generateRandomString();
   users[userRandomID] = {};
   users[userRandomID].id = userRandomID;
   users[userRandomID].email = req.body.email;
-  users[userRandomID].password = req.body.password;
+  users[userRandomID].password = hashedPassword;
 
   if (req.body.email === undefined || req.body.password === undefined) {
     res.status(400);
@@ -213,7 +219,8 @@ app.post("/login", (req,res) => {
 
 function authenticateUser(email, password) {
   for (var key in users) {
-    if (users[key].email === email && users[key].password === password) {
+    var compareEncripted = bcrypt.compareSync(password, users[key].password);
+    if (users[key].email === email && compareEncripted) { //check encripted password
       return users[key];
     }
   }
