@@ -78,9 +78,9 @@ app.get("/urls", (req, res) => {
       if (urlDatabase[key].userID === req.session.user_ID) { //Cookie
         userUrlDb[key] = urlDatabase[key];
       }
-      return userUrlDb;
-      }
     }
+    return userUrlDb;
+  }
 
   let templateVars = {
     urls: urlsForUser(urlDatabase),  //<----<-----<----- DB for each user
@@ -88,6 +88,7 @@ app.get("/urls", (req, res) => {
     userData: users
   };
   console.log("templateVars", templateVars);
+  console.log("urlDatabase", urlDatabase);
   res.render("urls_index", templateVars);
 });
 
@@ -106,7 +107,7 @@ app.get("/urls/new", (req, res) => {
 
 app.post("/urls/new", (req, res)=> {
   console.log(req.body);
-  urlDatabase[generateRandomString()] = req.body.longURL;
+  urlDatabase[generateRandomString()] = {longURL: req.body.longURL, userID: req.session.user_ID};
   //res.send("Ok \uD83D\uDC4D");
   res.redirect("/urls");
 });
@@ -130,7 +131,7 @@ app.post("/urls/:id/post", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_ID");
+  req.session = null;
   res.redirect("/urls");
 });
 
