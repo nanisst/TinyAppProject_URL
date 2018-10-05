@@ -12,9 +12,14 @@ app.set("view engine", "ejs");
 //DATA
 
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
-  "503nc4": "https://www.facebook.com/nanisotoo"
+  "b2xVn2": { //keys mini urls
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "userRandomID"
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID: "user2RandomID"
+  }
 };
 
 var users = {
@@ -51,12 +56,25 @@ app.get("/urls.json", (req, res) => {
 });
 
 
-// ___________++ Home ++___________
+// ________++ Home / URLS ++___________
 
 app.get("/urls", (req, res) => {
+
   let userToken = req.cookies.user_ID;
+  console.log(req.cookies.user_ID);
+
+  function urlsForUser(urlDatabase) {
+    let userUrlDb = {};
+    for (key in urlDatabase) {
+      if (urlDatabase[key].userID === req.cookies.user_ID) { //Cookie
+        userUrlDb[key] = urlDatabase[key];
+      }
+      return userUrlDb;
+      }
+    }
+
   let templateVars = {
-    urls: urlDatabase,
+    urls: urlsForUser(urlDatabase),  //<----<-----<----- DB for each user
     user: users[userToken],
     userData: users
   };
@@ -111,7 +129,7 @@ app.post("/logout", (req, res) => {
 // ___________++ Go ++___________
 
 app.get("/u/:shortURL", (req, res) => {
-  let longURL = urlDatabase[req.params.shortURL];
+  let longURL = urlDatabase[req.params.shortURL].longURL;
   if (longURL === undefined) {
     res.redirect("http://localhost:8080/urls");
   } else {res.redirect(longURL);}
@@ -185,11 +203,11 @@ app.post("/login", (req,res) => {
 
   if (user) {
     res.cookie("user_ID", user.id);
-    console.log("user_id ", user.id)  //<-----<-------<<-------
+    console.log("user_id ", user.id); //<-----<-------<<-------
     res.redirect("/urls");
   } else {
     res.status(400);
-    res.send('None shall pass');
+    res.send('None shall pass U+1F645');
   }
 });
 
