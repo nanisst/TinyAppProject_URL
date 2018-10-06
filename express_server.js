@@ -70,12 +70,11 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
 
   let userToken = req.session.user_ID;
-  //console.log(req.cookies.user_ID);
 
   function urlsForUser(urlDatabase) {
     let userUrlDb = {};
     for (key in urlDatabase) {
-      if (urlDatabase[key].userID === req.session.user_ID) { //Cookie
+      if (urlDatabase[key].userID === req.session.user_ID) {
         userUrlDb[key] = urlDatabase[key];
       }
     }
@@ -83,7 +82,7 @@ app.get("/urls", (req, res) => {
   }
 
   let templateVars = {
-    urls: urlsForUser(urlDatabase),  //<----<-----<----- DB for each user
+    urls: urlsForUser(urlDatabase),
     user: users[userToken],
     userData: users
   };
@@ -108,7 +107,6 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls/new", (req, res)=> {
   console.log(req.body);
   urlDatabase[generateRandomString()] = {longURL: req.body.longURL, userID: req.session.user_ID};
-  //res.send("Ok \uD83D\uDC4D");
   res.redirect("/urls");
 });
 
@@ -211,13 +209,11 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req,res) => {
-  //res.cookie("username", req.body.username);
 
   const user = authenticateUser(req.body.email, req.body.password);
 
   if (user) {
     req.session.user_ID = user.id;
-    //console.log("user_id ", user.id);
     res.redirect("/urls");
   } else {
     res.status(400);
@@ -228,8 +224,7 @@ app.post("/login", (req,res) => {
 function authenticateUser(email, password) {
   for (var key in users) {
     var compareEncripted = bcrypt.compareSync(password, users[key].password);
-    if (users[key].email === email && compareEncripted) { //check encripted password
-    //if (users[key].email === email && users[key].password === password) {
+    if (users[key].email === email && compareEncripted) {
       return users[key];
     }
   }
