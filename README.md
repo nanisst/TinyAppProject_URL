@@ -6,14 +6,14 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 #### Screenshot of a user's short URL collection:
 !["Home page, before login"]
-https://github.com/nanisst/TinyAppProject_URL/blob/master/screenshots/Captura%20de%20pantalla%202018-10-05%20a%20la(s)%208.38.45%20p.%20m..png
+(https://github.com/nanisst/TinyAppProject_URL/blob/master/screenshots/Captura%20de%20pantalla%202018-10-05%20a%20la(s)%208.38.45%20p.%20m..png)
 
 !["Home page, after login"]
-https://github.com/nanisst/TinyAppProject_URL/blob/master/screenshots/Captura%20de%20pantalla%202018-10-05%20a%20la(s)%208.39.18%20p.%20m..png
+(https://github.com/nanisst/TinyAppProject_URL/blob/master/screenshots/Captura%20de%20pantalla%202018-10-05%20a%20la(s)%208.39.18%20p.%20m..png)
 
 #### Screenshot of the edit & analytics page:
 !["Create a new url"]
-https://github.com/nanisst/TinyAppProject_URL/blob/master/screenshots/Captura%20de%20pantalla%202018-10-05%20a%20la(s)%208.39.36%20p.%20m..png
+(https://github.com/nanisst/TinyAppProject_URL/blob/master/screenshots/Captura%20de%20pantalla%202018-10-05%20a%20la(s)%208.39.36%20p.%20m..png)
 
 
 ## Features
